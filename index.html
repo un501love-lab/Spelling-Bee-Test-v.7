@@ -1,0 +1,1320 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128029;</text></svg>">
+<title>Spelling Bee Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --bg:#FAF8F2;
+  --surface:#FFFFFF;
+  --surface-2:#F4EFE3;
+  --ink:#241F14;
+  --muted:#6E6552;
+  --accent:#B97609;
+  --accent-strong:#8A5800;
+  --accent-soft:#F6E7C4;
+  --border:#E4DCC9;
+  --good:#3E7A3E;
+  --danger:#A63A2E;
+  --focus:#B97609;
+  --shadow:0 1px 3px rgba(60,45,10,.08),0 4px 16px rgba(60,45,10,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#17140D;
+    --surface:#211D13;
+    --surface-2:#2A2517;
+    --ink:#F1EAD8;
+    --muted:#A89E86;
+    --accent:#F0B23C;
+    --accent-strong:#F7C765;
+    --accent-soft:#3A2F14;
+    --border:#3B3421;
+    --good:#7FBF7F;
+    --danger:#E08575;
+    --focus:#F0B23C;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#17140D; --surface:#211D13; --surface-2:#2A2517; --ink:#F1EAD8;
+  --muted:#A89E86; --accent:#F0B23C; --accent-strong:#F7C765; --accent-soft:#3A2F14;
+  --border:#3B3421; --good:#7FBF7F; --danger:#E08575; --focus:#F0B23C;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+}
+:root[data-theme="light"]{
+  --bg:#FAF8F2; --surface:#FFFFFF; --surface-2:#F4EFE3; --ink:#241F14;
+  --muted:#6E6552; --accent:#B97609; --accent-strong:#8A5800; --accent-soft:#F6E7C4;
+  --border:#E4DCC9; --good:#3E7A3E; --danger:#A63A2E; --focus:#B97609;
+  --shadow:0 1px 3px rgba(60,45,10,.08),0 4px 16px rgba(60,45,10,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Leelawadee UI","Noto Sans Thai","Sarabun","Segoe UI",system-ui,sans-serif;
+  font-size:16px;line-height:1.55;
+  min-height:100vh;
+}
+.en{font-family:Georgia,"Times New Roman",serif}
+button{font-family:inherit;font-size:1rem;cursor:pointer}
+input,textarea,select{
+  font-family:inherit;font-size:1rem;color:var(--ink);
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:.55rem .75rem;width:100%;
+}
+input:focus,textarea:focus,select:focus,button:focus-visible{
+  outline:2px solid var(--focus);outline-offset:1px;
+}
+.wrap{max-width:960px;margin:0 auto;padding:1rem 1rem 4rem}
+
+/* header */
+header{
+  display:flex;align-items:center;gap:.9rem;
+  padding:1.2rem 0 1rem;border-bottom:2px solid var(--accent);
+  margin-bottom:1.1rem;
+}
+.beemark{flex:0 0 auto;width:46px;height:46px}
+h1{
+  font-family:Georgia,serif;font-size:1.7rem;margin:0;line-height:1.15;
+  letter-spacing:.01em;
+}
+
+/* tabs */
+nav{display:flex;gap:.4rem;margin-bottom:1.2rem;flex-wrap:wrap}
+nav button{
+  border:1px solid var(--border);background:var(--surface);color:var(--muted);
+  padding:.5rem 1.05rem;border-radius:999px;font-weight:600;font-size:.95rem;
+}
+nav button[aria-selected="true"]{
+  background:var(--accent);border-color:var(--accent);color:#fff;
+}
+:root[data-theme="dark"] nav button[aria-selected="true"]{color:#1a1508}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) nav button[aria-selected="true"]{color:#1a1508}
+}
+
+section[hidden]{display:none}
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:1.1rem 1.2rem;box-shadow:var(--shadow);margin-bottom:1rem;
+}
+.card h2{font-size:1.08rem;margin:0 0 .7rem;display:flex;align-items:center;gap:.5rem}
+.card h2 .tag{
+  font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent-strong);background:var(--accent-soft);
+  padding:.15rem .55rem;border-radius:999px;
+}
+.hint{color:var(--muted);font-size:.88rem;margin:.3rem 0 .6rem}
+
+/* buttons */
+.btn{
+  border:1px solid var(--border);background:var(--surface);color:var(--ink);
+  padding:.55rem 1.1rem;border-radius:9px;font-weight:600;
+}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .btn.primary{color:#1a1508}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .btn.primary{color:#1a1508}
+}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--danger)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.small{padding:.3rem .7rem;font-size:.85rem;border-radius:7px}
+
+.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.grow{flex:1 1 200px}
+
+/* bank list */
+.word-list{list-style:none;margin:.4rem 0 0;padding:0;display:flex;flex-direction:column;gap:.4rem}
+.word-item{
+  display:flex;gap:.7rem;align-items:flex-start;
+  background:var(--surface-2);border:1px solid var(--border);
+  border-radius:10px;padding:.55rem .8rem;
+}
+.word-item .num{
+  font-family:Georgia,serif;font-weight:700;color:var(--accent-strong);
+  min-width:2.1em;text-align:right;font-variant-numeric:tabular-nums;
+  padding-top:.05rem;
+}
+.word-item .w{font-family:Georgia,serif;font-weight:700;font-size:1.05rem}
+.word-item .s{color:var(--muted);font-size:.9rem;font-family:Georgia,serif;font-style:italic}
+.word-item .body{flex:1 1 auto;min-width:0;overflow-wrap:anywhere}
+.word-item .acts{display:flex;gap:.3rem;flex:0 0 auto}
+.icon-btn{
+  border:none;background:transparent;color:var(--muted);border-radius:6px;
+  padding:.2rem .45rem;font-size:1rem;line-height:1;
+}
+.icon-btn:hover{background:var(--accent-soft);color:var(--accent-strong)}
+
+/* select tab */
+.pick-item{cursor:pointer;user-select:none}
+.pick-item input[type=checkbox]{width:1.1rem;height:1.1rem;margin-top:.25rem;accent-color:var(--accent);flex:0 0 auto}
+.pick-item.checked{border-color:var(--accent);background:var(--accent-soft)}
+.counter{
+  font-weight:700;font-variant-numeric:tabular-nums;
+  color:var(--accent-strong);
+}
+.counter.full{color:var(--danger)}
+
+/* settings grid */
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.9rem}
+.field label{display:block;font-size:.85rem;font-weight:600;color:var(--muted);margin-bottom:.25rem}
+.field .val{font-weight:700;color:var(--accent-strong);font-variant-numeric:tabular-nums}
+input[type=range]{padding:0;accent-color:var(--accent);height:2rem}
+
+/* stage (test player) */
+.stage{
+  text-align:center;padding:2.2rem 1rem 2.4rem;
+  border:1px solid var(--border);border-radius:18px;
+  background:
+    radial-gradient(ellipse at 50% -30%, var(--accent-soft) 0%, transparent 55%),
+    var(--surface);
+  box-shadow:var(--shadow);
+}
+.stage .progress{color:var(--muted);font-size:.95rem;font-variant-numeric:tabular-nums;letter-spacing:.06em}
+.stage .bignum{
+  font-family:Georgia,serif;font-weight:700;
+  font-size:clamp(3.2rem,12vw,6rem);line-height:1.05;margin:.2rem 0 .1rem;
+  font-variant-numeric:tabular-nums;
+}
+.stage .phase{font-size:1.05rem;color:var(--muted);min-height:1.7em}
+.stage .phase.writing{color:var(--accent-strong);font-weight:700}
+.timer-ring{
+  --p:0;
+  width:130px;height:130px;border-radius:50%;
+  margin:1rem auto .4rem;position:relative;
+  background:conic-gradient(var(--accent) calc(var(--p)*1%), var(--surface-2) 0);
+  display:flex;align-items:center;justify-content:center;
+}
+.timer-ring::before{
+  content:"";position:absolute;inset:9px;border-radius:50%;background:var(--surface);
+}
+.timer-ring .secs{
+  position:relative;font-family:Georgia,serif;font-weight:700;font-size:2.1rem;
+  font-variant-numeric:tabular-nums;
+}
+.reveal{
+  margin-top:1rem;font-family:Georgia,serif;font-size:1.5rem;font-weight:700;
+  letter-spacing:.04em;min-height:1.4em;
+}
+.reveal .sen{display:block;font-size:.95rem;font-weight:400;font-style:italic;color:var(--muted);margin-top:.2rem}
+.stage-controls{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:1.4rem}
+
+/* share box */
+.share-link{
+  font-family:Consolas,monospace;font-size:.82rem;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:8px;padding:.6rem .7rem;
+  overflow-x:auto;white-space:nowrap;
+}
+
+/* term switcher */
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden;background:var(--surface)}
+.seg button{border:none;background:transparent;color:var(--muted);padding:.42rem 1.1rem;font-weight:700;font-size:.95rem}
+.seg button.on{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .seg button.on{color:#1a1508}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .seg button.on{color:#1a1508}
+}
+
+/* grade filter chips */
+.chip{
+  border:1px solid var(--border);background:var(--surface);color:var(--muted);
+  padding:.3rem .85rem;border-radius:999px;font-weight:600;font-size:.88rem;
+}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-strong)}
+
+/* grade badge on word items */
+.gbadge{
+  display:inline-block;font-size:.72rem;font-weight:700;
+  color:var(--accent-strong);background:var(--accent-soft);
+  border-radius:999px;padding:.05rem .5rem;margin-left:.45rem;vertical-align:middle;
+  font-family:"Leelawadee UI","Noto Sans Thai","Segoe UI",sans-serif;
+}
+
+/* sticky action bar (pick tab) */
+.stickybar{
+  position:sticky;bottom:.6rem;z-index:20;
+  display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;justify-content:flex-end;
+  background:var(--surface);border:1px solid var(--accent);border-radius:12px;
+  padding:.6rem .9rem;margin-top:1rem;
+  box-shadow:0 4px 20px rgba(0,0,0,.18);
+}
+.stickybar .info{margin-right:auto;font-size:.95rem}
+
+/* toast */
+#toast{
+  position:fixed;left:50%;bottom:1.4rem;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:var(--bg);padding:.6rem 1.2rem;border-radius:999px;
+  font-size:.92rem;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;
+  max-width:90vw;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* import banner */
+.banner{
+  border:1px solid var(--accent);background:var(--accent-soft);
+  border-radius:12px;padding:.9rem 1.1rem;margin-bottom:1rem;
+}
+.banner b{color:var(--accent-strong)}
+
+.empty{color:var(--muted);text-align:center;padding:1.4rem 0;font-size:.95rem}
+details.bulk{margin-top:.8rem}
+details.bulk summary{cursor:pointer;color:var(--accent-strong);font-weight:600;font-size:.92rem}
+textarea{min-height:110px;resize:vertical;font-family:Consolas,monospace;font-size:.88rem}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important}
+}
+@media (max-width:560px){
+  .wrap{padding:.6rem .7rem 3rem}
+  header{padding-top:.8rem}
+  h1{font-size:1.35rem}
+}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<header>
+  <svg class="beemark" viewBox="0 0 48 48" aria-hidden="true">
+    <ellipse cx="24" cy="27" rx="13" ry="15" fill="var(--accent)"/>
+    <rect x="11" y="22" width="26" height="4.5" rx="2" fill="var(--ink)"/>
+    <rect x="12" y="30" width="24" height="4.5" rx="2" fill="var(--ink)"/>
+    <circle cx="24" cy="13" r="7" fill="var(--ink)"/>
+    <circle cx="21.5" cy="12" r="1.6" fill="var(--bg)"/>
+    <circle cx="26.5" cy="12" r="1.6" fill="var(--bg)"/>
+    <path d="M18 7 L14 2 M30 7 L34 2" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <ellipse cx="10" cy="20" rx="7" ry="4.5" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="1.4" transform="rotate(-30 10 20)"/>
+    <ellipse cx="38" cy="20" rx="7" ry="4.5" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="1.4" transform="rotate(30 38 20)"/>
+  </svg>
+  <div>
+    <h1 class="en">Spelling Bee Test</h1>
+  </div>
+</header>
+
+<div id="importBanner" class="banner" hidden></div>
+
+<div class="row" style="margin:0 0 .9rem;align-items:center">
+  <span style="font-weight:700;color:var(--muted)">ภาคเรียน:</span>
+  <div class="seg" id="termSeg">
+    <button data-term="1">เทอม 1</button>
+    <button data-term="2">เทอม 2</button>
+  </div>
+  <span class="hint" style="margin:0">คลังคำศัพท์ของแต่ละเทอมแยกเก็บจากกัน</span>
+</div>
+
+<nav role="tablist">
+  <button role="tab" aria-selected="true" data-tab="bank">📚 คลังคำศัพท์</button>
+  <button role="tab" aria-selected="false" data-tab="pick">✅ เลือกคำสอบ</button>
+  <button role="tab" aria-selected="false" data-tab="test">🔊 ทดสอบ</button>
+</nav>
+
+<!-- ================= BANK ================= -->
+<section id="tab-bank">
+  <div class="card">
+    <h2>เพิ่มคำศัพท์ <span class="tag">ไม่จำกัดจำนวน</span></h2>
+    <div class="row">
+      <div class="grow" style="flex:1 1 160px">
+        <input id="inWord" placeholder="คำศัพท์ เช่น  butterfly" autocomplete="off">
+      </div>
+      <div class="grow" style="flex:2 1 260px">
+        <input id="inSentence" placeholder="ประโยคตัวอย่าง เช่น  A butterfly landed on the flower." autocomplete="off">
+      </div>
+      <div style="flex:0 1 130px">
+        <select id="inGrade" aria-label="ระดับชั้น">
+          <option value="">ไม่ระบุชั้น</option>
+          <option>ป.1</option><option>ป.2</option><option>ป.3</option>
+          <option>ป.4</option><option>ป.5</option><option>ป.6</option>
+        </select>
+      </div>
+      <button class="btn primary" id="btnAdd">เพิ่มคำ</button>
+      <button class="btn ghost" id="btnCancelEdit" hidden>ยกเลิกแก้ไข</button>
+    </div>
+    <details class="bulk">
+      <summary>เพิ่มหลายคำพร้อมกัน (วางเป็นบรรทัด หรือคัดลอกเซลล์จาก Excel / Google Sheets มาวาง)</summary>
+      <p class="hint">พิมพ์บรรทัดละ 1 คำ รูปแบบ <b>คำ | ประโยค</b> เช่น <code>apple | I eat an apple every day.</code><br>
+      หรือคัดลอก 2 คอลัมน์ (คำ, ประโยค) จาก Excel / Google Sheets มาวางในช่องนี้ได้โดยตรง</p>
+      <textarea id="bulkText" placeholder="apple | I eat an apple every day.&#10;tiger | The tiger runs fast."></textarea>
+      <div class="row" style="margin-top:.5rem">
+        <button class="btn" id="btnBulk">เพิ่มทั้งหมด</button>
+      </div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>นำเข้า / ส่งออกไฟล์ <span class="tag">Excel · Google Sheets · CSV</span></h2>
+    <p class="hint">อัปโหลดไฟล์ <b>Excel (.xlsx)</b> หรือ <b>CSV</b> — คอลัมน์ A = คำศัพท์, คอลัมน์ B = ประโยคตัวอย่าง, คอลัมน์ C = ระดับชั้น เช่น ป.1 (มีหรือไม่ก็ได้)<br>
+    📑 ไฟล์ Excel ที่<b>แยกชีตเป็นระดับชั้น</b> (เช่น ชีตชื่อ ป.1, ป.2, … ป.6) ระบบจะอ่าน<b>ทุกชีต</b>และติดป้ายระดับชั้นให้ตามชื่อชีตอัตโนมัติ<br>
+    จาก <b>Google Sheets</b>: เมนู ไฟล์ → ดาวน์โหลด → Microsoft Excel (.xlsx) แล้วนำมาอัปโหลดที่นี่ (ได้ทุกชีตพร้อมกัน) หรือคัดลอกเซลล์มาวางในช่อง "เพิ่มหลายคำพร้อมกัน" ด้านบนก็ได้<br>
+    คำที่นำเข้าจะเข้าสู่คลังของ<b>เทอมที่เลือกอยู่ด้านบน</b><br>
+    🌐 <b>คลังกลางสำหรับลิงก์เว็บไซต์ (GitHub):</b> อัปโหลดไฟล์คลังคำไว้ที่เดียวกับ index.html บน GitHub ตั้งชื่อว่า <b>words-term1.xlsx</b> / <b>words-term2.xlsx</b> (ไฟล์ Excel แยกชีต ป.1–ป.6 ได้) หรือ <b>words-term1.csv</b> / <b>words-term2.csv</b> (กด "ดาวน์โหลดคลังเป็น CSV" ได้ไฟล์ชื่อถูกต้องพร้อมใช้) — <b>ทุกคนที่เปิดลิงก์จะได้คลังคำชุดนี้อัตโนมัติ</b> อัปโหลดไฟล์ใหม่ทับได้เรื่อย ๆ คนอื่นรีเฟรชหน้าก็ได้เวอร์ชันล่าสุด</p>
+    <div class="row">
+      <input type="file" id="fileIn" accept=".xlsx,.csv,.tsv,.txt" style="flex:1 1 240px">
+      <button class="btn" id="btnExport">⬇ ดาวน์โหลดคลังเป็น CSV</button>
+      <button class="btn danger ghost" id="btnClearBank">🗑 ล้างคลังทั้งหมด</button>
+    </div>
+    <div id="importPreview" class="banner" style="margin-top:.8rem" hidden></div>
+  </div>
+
+  <div class="card">
+    <h2>คำศัพท์ทั้งหมด <span id="bankCount" class="tag">0 คำ</span></h2>
+    <ul class="word-list" id="bankList"></ul>
+    <div class="empty" id="bankEmpty">ยังไม่มีคำศัพท์ — เพิ่มคำแรกด้านบน หรือ <button class="btn small" id="btnSample">โหลดคำตัวอย่าง 10 คำ</button></div>
+  </div>
+</section>
+
+<!-- ================= PICK ================= -->
+<section id="tab-pick" hidden>
+  <div class="card">
+    <h2>เลือกคำที่จะสอบ <span class="tag">สูงสุด 30 คำ</span></h2>
+    <p class="hint">กดปุ่มระดับชั้นด้านล่างเพื่อกรองก่อน <b>หมายเลขจะเริ่มนับ 1 ใหม่ในชั้นนั้น</b> แล้วพิมพ์เลือกแบบช่วงหรือเจาะจง เช่น <b>1-10</b> หรือ <b>2,5,8-12</b> หรือพิมพ์คำศัพท์เอง เช่น <b>apple, tiger</b> แล้วกด "เลือกตามที่พิมพ์" — หรือคลิกติ๊กเลือกจากรายการก็ได้ (เลือกข้ามหลายชั้นได้ สลับตัวกรองแล้วเลือกเพิ่มได้เลย)</p>
+    <div class="row">
+      <div class="grow"><input id="pickExpr" placeholder="เช่น 1-10 หรือ 2,5,8-12 หรือ apple, tiger" autocomplete="off"></div>
+      <button class="btn primary" id="btnApplyExpr">เลือกตามที่พิมพ์</button>
+      <button class="btn" id="btnPickAll">เลือก 30 คำแรก</button>
+      <button class="btn ghost" id="btnPickClear">ล้างการเลือก</button>
+    </div>
+    <div class="row" id="gradeChips" style="margin-top:.8rem"></div>
+    <p style="margin:.7rem 0 0">เลือกแล้ว <span id="pickCount" class="counter">0 / 30</span> คำ</p>
+  </div>
+
+  <div class="card">
+    <ul class="word-list" id="pickList"></ul>
+    <div class="empty" id="pickEmpty">คลังคำศัพท์ยังว่าง — ไปเพิ่มคำที่แท็บ "คลังคำศัพท์" ก่อน</div>
+  </div>
+
+  <div class="card">
+    <h2>แชร์ชุดข้อสอบนี้ <span class="tag">ลิงก์</span></h2>
+    <p class="hint">ลิงก์จะฝังคำศัพท์และประโยคที่เลือกไว้ในตัว ผู้รับเปิดแล้วเริ่มสอบได้ทันที ไม่ต้องพิมพ์เอง</p>
+    <div class="row">
+      <button class="btn primary" id="btnShare">สร้างลิงก์และคัดลอก</button>
+    </div>
+    <div class="share-link" id="shareOut" hidden></div>
+  </div>
+
+  <div class="stickybar">
+    <span class="info">เลือกแล้ว <span id="pickCountBar" class="counter">0 / 30</span> คำ</span>
+    <button class="btn primary" id="btnGoTest" style="font-size:1.02rem;padding:.6rem 1.6rem">ไปหน้าทดสอบ ➜</button>
+  </div>
+</section>
+
+<!-- ================= TEST ================= -->
+<section id="tab-test" hidden>
+  <div class="card">
+    <h2>ตั้งค่าเสียงและเวลา <span class="tag">American English</span></h2>
+    <div class="settings-grid">
+      <div class="field">
+        <label for="voiceSel">เสียงอ่าน (สำเนียงอเมริกัน)</label>
+        <select id="voiceSel"></select>
+      </div>
+      <div class="field">
+        <label for="rate">ความเร็วเสียง: <span class="val" id="rateVal">0.80×</span></label>
+        <input type="range" id="rate" min="0.5" max="1.2" step="0.05" value="0.8">
+      </div>
+      <div class="field">
+        <label for="repeats">จำนวนรอบอ่านคำ: <span class="val" id="repeatsVal">2 รอบ</span></label>
+        <input type="range" id="repeats" min="1" max="5" step="1" value="2">
+      </div>
+      <div class="field">
+        <label for="writeSecs">เวลาเขียนต่อข้อ: <span class="val" id="writeSecsVal">15 วินาที</span></label>
+        <input type="range" id="writeSecs" min="5" max="60" step="5" value="15">
+      </div>
+      <div class="field">
+        <label>&nbsp;</label>
+        <button class="btn" id="btnPreviewVoice">🔊 ทดสอบเสียง</button>
+      </div>
+    </div>
+    <p class="hint" id="voiceWarn" hidden style="margin-top:.7rem;color:var(--danger);font-weight:600">⚠️ เบราว์เซอร์นี้ไม่มีเสียงอ่านภาษาอังกฤษ — แนะนำให้เปิดลิงก์นี้ใน Google Chrome หรือ Microsoft Edge บนคอมพิวเตอร์ / มือถือ แล้วลองใหม่</p>
+    <p class="hint" style="margin-top:.7rem">ลำดับการอ่านแต่ละข้อ: <b>"Number 1."</b> → อ่านคำตามจำนวนรอบที่ตั้ง (เว้นจังหวะ) → อ่านประโยค → เวลาเขียน → เสียงกริ่ง 🔔 → ข้อถัดไป<br>💡 ถ้าไม่ได้ยินเสียง: กดปุ่ม "ทดสอบเสียง" ก่อน ตรวจว่าไม่ได้ปิดเสียงเครื่อง/แท็บ และลองเปลี่ยนเสียงอ่านในเมนู</p>
+  </div>
+
+  <div class="stage">
+    <div class="progress" id="stgProgress">พร้อมเริ่มการทดสอบ</div>
+    <div class="bignum en" id="stgNum">—</div>
+    <div class="phase" id="stgPhase">เลือกคำที่แท็บ "เลือกคำสอบ" แล้วกดเริ่ม</div>
+    <div class="timer-ring" id="ring" hidden><span class="secs" id="ringSecs">15</span></div>
+    <div class="reveal en" id="stgReveal" hidden></div>
+    <div class="stage-controls">
+      <button class="btn primary" id="btnStart" style="font-size:1.05rem;padding:.65rem 1.8rem">▶ เริ่มการทดสอบ</button>
+      <button class="btn" id="btnShuffle">🔀 สลับลำดับคำ</button>
+      <button class="btn" id="btnPause" hidden>⏸ พัก</button>
+      <button class="btn" id="btnRepeat" hidden>🔁 อ่านข้อนี้ซ้ำ</button>
+      <button class="btn" id="btnSkip" hidden>⏭ ข้ามไปข้อถัดไป</button>
+      <button class="btn danger" id="btnStop" hidden>⏹ จบการทดสอบ</button>
+    </div>
+    <div class="row" style="justify-content:center;margin-top:1rem">
+      <label style="font-size:.88rem;color:var(--muted);display:flex;align-items:center;gap:.4rem;cursor:pointer">
+        <input type="checkbox" id="chkReveal" style="width:1rem;height:1rem;accent-color:var(--accent)">
+        แสดงคำเฉลยบนจอ (สำหรับครู)
+      </label>
+    </div>
+  </div>
+
+  <div class="card" id="answerCard" hidden style="margin-top:1rem">
+    <h2>📝 เฉลยคำศัพท์ชุดนี้ <span class="tag" id="ansCount"></span></h2>
+    <p class="hint">เรียงตามลำดับที่อ่านจริงในการทดสอบ (ข้อ 1 คือคำแรกที่นักเรียนได้ยิน)</p>
+    <ul class="word-list" id="answerList"></ul>
+    <div class="row" style="margin-top:.6rem">
+      <button class="btn" id="btnHideAns">ปิดเฉลย</button>
+    </div>
+  </div>
+</section>
+</div>
+
+<div id="toast" role="status"></div>
+
+<script>
+"use strict";
+/* ---------- state ---------- */
+const LS_SET="sbt-settings-v1", LS_TERM="sbt-term";
+let term=localStorage.getItem(LS_TERM)==="2"?"2":"1";
+let bank=[];            // {w, s, g}  g = ระดับชั้น "ป.1".."ป.6" หรือ ""
+let picked=new Set();   // indexes into bank
+let testList=[];        // snapshot used by the player
+let gradeFilter="all";  // "all" | "ป.1".."ป.6" | "none"
+const MAX=30;
+
+const bankKey=()=>"sbt-bank-t"+term;
+function loadBank(){
+  let b=null;
+  try{ b=JSON.parse(localStorage.getItem(bankKey())||"null"); }catch(e){}
+  if(!Array.isArray(b)&&term==="1"){
+    // migrate the old single bank into term 1
+    try{ b=JSON.parse(localStorage.getItem("sbt-bank-v1")||"[]"); }catch(e){}
+  }
+  if(!Array.isArray(b))b=[];
+  bank=b.map(it=>({w:String(it.w||""),s:String(it.s||""),g:String(it.g||"")}));
+}
+loadBank();
+let settings={rate:0.8, writeSecs:15, repeats:2, voiceURI:""};
+try{ Object.assign(settings, JSON.parse(localStorage.getItem(LS_SET)||"{}")); }catch(e){}
+
+const $=id=>document.getElementById(id);
+function saveBank(){ localStorage.setItem(bankKey(), JSON.stringify(bank)); }
+function saveSettings(){ localStorage.setItem(LS_SET, JSON.stringify(settings)); }
+function toast(msg){
+  const t=$("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),2600);
+}
+function esc(s){ return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* ---------- tabs ---------- */
+document.querySelectorAll("nav [data-tab]").forEach(b=>{
+  b.addEventListener("click",()=>showTab(b.dataset.tab));
+});
+function showTab(name){
+  document.querySelectorAll("nav [data-tab]").forEach(b=>b.setAttribute("aria-selected", b.dataset.tab===name?"true":"false"));
+  ["bank","pick","test"].forEach(t=>$("tab-"+t).hidden = t!==name);
+  // selection changed since the test list was built? rebuild (unless a test is running)
+  if(name==="test"&&!run.active&&testKey!==pickKey()) resetStage();
+}
+function pickKey(){ return [...picked].sort((a,b)=>a-b).join(","); }
+let testKey=null;
+
+/* ---------- central bank: words-termX.csv hosted next to index.html ---------- */
+let remoteNotified={};
+async function fetchRemoteItems(t){
+  // Excel first: words-termX.xlsx (อ่านทุกชีต ติดป้ายชั้นตามชื่อชีต)
+  try{
+    const r=await fetch(`words-term${t}.xlsx?v=${Date.now()}`,{cache:"no-store"});
+    if(r.ok){
+      const buf=await r.arrayBuffer();
+      const head=buf.byteLength>=2?new TextDecoder().decode(new Uint8Array(buf,0,2)):"";
+      if(head==="PK"){ // real zip/xlsx, not an HTML error page
+        const sheets=await parseXLSX(buf);
+        let items=[];
+        for(const sh of sheets) items=items.concat(rowsToItems(sh.rows,gradeFromName(sh.sheet)));
+        if(items.length)return items;
+      }
+    }
+  }catch(e){}
+  // fallback: words-termX.csv
+  try{
+    const r=await fetch(`words-term${t}.csv?v=${Date.now()}`,{cache:"no-store"});
+    if(!r.ok)return null;
+    const text=await r.text();
+    if(/^\s*</.test(text))return null; // ignore HTML error pages
+    const items=rowsToItems(text.includes("\t")?parseTSV(text):parseCSV(text),"");
+    return items.length?items:null;
+  }catch(e){ return null; } // no central file on this host (e.g. claude.ai) — local bank only
+}
+async function loadRemoteBank(){
+  if(location.protocol==="file:")return;
+  const t=term;
+  const items=await fetchRemoteItems(t);
+  if(!items||term!==t)return;
+  // central file is the base; keep local words that aren't in it
+  const key=it=>it.w.toLowerCase()+"|"+(it.g||"");
+  const rset=new Set(items.map(key));
+  const localOnly=bank.filter(it=>!rset.has(key(it)));
+  const merged=items.concat(localOnly);
+  if(JSON.stringify(merged)===JSON.stringify(bank))return; // already up to date
+  bank=merged; picked=new Set();
+  saveBank(); renderBank();
+  if(!remoteNotified[t]){ remoteNotified[t]=true; toast(`อัปเดตคลังกลางจากเว็บไซต์แล้ว (เทอม ${t}: ${items.length} คำ)`); }
+}
+
+/* ---------- term switch ---------- */
+function updateTermUI(){
+  document.querySelectorAll("#termSeg button").forEach(b=>b.classList.toggle("on",b.dataset.term===term));
+}
+$("termSeg").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b||b.dataset.term===term)return;
+  term=b.dataset.term; localStorage.setItem(LS_TERM,term);
+  loadBank(); picked=new Set(); gradeFilter="all";
+  updateTermUI(); renderBank();
+  toast(`สลับไปคลังคำ เทอม ${term} (${bank.length} คำ)`);
+  loadRemoteBank();
+});
+
+/* ---------- bank ---------- */
+let editIdx=-1;
+function renderBank(){
+  const list=$("bankList");
+  $("bankCount").textContent=`เทอม ${term} · ${bank.length} คำ`;
+  $("bankEmpty").style.display=bank.length?"none":"";
+  list.innerHTML=bank.map((it,i)=>`
+    <li class="word-item">
+      <span class="num">${i+1}.</span>
+      <span class="body"><span class="w">${esc(it.w)}</span>${it.g?`<span class="gbadge">${esc(it.g)}</span>`:""}
+        ${it.s?`<br><span class="s">${esc(it.s)}</span>`:""}
+      </span>
+      <span class="acts">
+        <button class="icon-btn" title="ฟังเสียง" data-say="${i}">🔊</button>
+        <button class="icon-btn" title="แก้ไข" data-edit="${i}">✏️</button>
+        <button class="icon-btn" title="ลบ" data-del="${i}">🗑️</button>
+      </span>
+    </li>`).join("");
+  renderPick();
+}
+$("bankList").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b)return;
+  if(b.dataset.say!==undefined){ const it=bank[+b.dataset.say]; speakOnce(it.w); }
+  if(b.dataset.edit!==undefined){
+    editIdx=+b.dataset.edit;
+    $("inWord").value=bank[editIdx].w; $("inSentence").value=bank[editIdx].s;
+    $("inGrade").value=bank[editIdx].g||"";
+    $("btnAdd").textContent="บันทึกการแก้ไข"; $("btnCancelEdit").hidden=false;
+    $("inWord").focus();
+  }
+  if(b.dataset.del!==undefined){
+    const i=+b.dataset.del;
+    bank.splice(i,1);
+    picked=new Set([...picked].filter(x=>x!==i).map(x=>x>i?x-1:x));
+    saveBank(); renderBank();
+  }
+});
+function addWord(){
+  const w=$("inWord").value.trim(), s=$("inSentence").value.trim(), g=$("inGrade").value;
+  if(!w){ toast("กรุณาพิมพ์คำศัพท์ก่อน"); $("inWord").focus(); return; }
+  if(editIdx>=0){ bank[editIdx]={w,s,g}; editIdx=-1; $("btnAdd").textContent="เพิ่มคำ"; $("btnCancelEdit").hidden=true; toast("แก้ไขแล้ว"); }
+  else { bank.push({w,s,g}); toast(`เพิ่ม "${w}" แล้ว (รวม ${bank.length} คำ)`); }
+  $("inWord").value=""; $("inSentence").value=""; $("inWord").focus();
+  saveBank(); renderBank();
+}
+$("btnAdd").addEventListener("click",addWord);
+$("inSentence").addEventListener("keydown",e=>{ if(e.key==="Enter")addWord(); });
+$("inWord").addEventListener("keydown",e=>{ if(e.key==="Enter")$("inSentence").focus(); });
+$("btnCancelEdit").addEventListener("click",()=>{
+  editIdx=-1; $("inWord").value=""; $("inSentence").value=""; $("inGrade").value="";
+  $("btnAdd").textContent="เพิ่มคำ"; $("btnCancelEdit").hidden=true;
+});
+$("btnBulk").addEventListener("click",()=>{
+  const lines=$("bulkText").value.split("\n").map(l=>l.replace(/\r$/,"")).filter(l=>l.trim());
+  let n=0;
+  for(const line of lines){
+    // paste from Excel / Google Sheets uses tab; typed format uses |
+    const sep=line.includes("\t")?"\t":"|";
+    const parts=line.split(sep);
+    const w=(parts[0]||"").trim();
+    if(w){ bank.push({w, s:(parts[1]||"").trim(), g:gradeFromName(parts[2])}); n++; }
+  }
+  if(n){ $("bulkText").value=""; saveBank(); renderBank(); toast(`เพิ่มแล้ว ${n} คำ`); }
+  else toast("ไม่พบคำในข้อความที่วาง");
+});
+
+/* ---------- file import (Excel / CSV) & export ---------- */
+function parseCSV(text){
+  // small CSV parser with quoted-field support
+  const rows=[]; let row=[], field="", inQ=false;
+  text=text.replace(/^﻿/,"");
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(inQ){
+      if(c==='"'){ if(text[i+1]==='"'){ field+='"'; i++; } else inQ=false; }
+      else field+=c;
+    }else if(c==='"') inQ=true;
+    else if(c===","){ row.push(field); field=""; }
+    else if(c==="\n"){ row.push(field); rows.push(row); row=[]; field=""; }
+    else if(c!=="\r") field+=c;
+  }
+  if(field!==""||row.length){ row.push(field); rows.push(row); }
+  return rows;
+}
+function parseTSV(text){
+  return text.replace(/^﻿/,"").split("\n")
+    .map(l=>l.replace(/\r$/,"").split("\t"));
+}
+async function unzipEntries(buf){
+  const dv=new DataView(buf);
+  let eocd=-1;
+  const lo=Math.max(0,buf.byteLength-22-65536);
+  for(let i=buf.byteLength-22;i>=lo;i--){
+    if(dv.getUint32(i,true)===0x06054b50){ eocd=i; break; }
+  }
+  if(eocd<0) throw new Error("not a zip");
+  const count=dv.getUint16(eocd+10,true);
+  let off=dv.getUint32(eocd+16,true);
+  const entries=[];
+  for(let i=0;i<count;i++){
+    if(dv.getUint32(off,true)!==0x02014b50) break;
+    const method=dv.getUint16(off+10,true);
+    const csize=dv.getUint32(off+20,true);
+    const nlen=dv.getUint16(off+28,true);
+    const elen=dv.getUint16(off+30,true);
+    const clen=dv.getUint16(off+32,true);
+    const lho=dv.getUint32(off+42,true);
+    const name=new TextDecoder().decode(new Uint8Array(buf,off+46,nlen)).replace(/\\/g,"/");
+    entries.push({name,method,csize,lho});
+    off+=46+nlen+elen+clen;
+  }
+  return entries.map(e=>({ name:e.name, read:async()=>{
+    const nl=dv.getUint16(e.lho+26,true), el=dv.getUint16(e.lho+28,true);
+    const data=new Uint8Array(buf,e.lho+30+nl+el,e.csize);
+    if(e.method===0) return data;
+    if(e.method!==8) throw new Error("unsupported compression");
+    const ds=new DecompressionStream("deflate-raw");
+    const res=new Response(new Blob([data]).stream().pipeThrough(ds));
+    return new Uint8Array(await res.arrayBuffer());
+  }}));
+}
+function colOf(ref){ return (ref.match(/^[A-Z]+/)||[""])[0]; }
+function gradeFromName(n){
+  n=String(n||"").trim();
+  const m=n.match(/(?:ป|ประถม|p|grade|g)\.?\s*([1-6])/i)||n.match(/^([1-6])$/);
+  return m?"ป."+m[1]:"";
+}
+async function parseXLSX(buf){
+  if(typeof DecompressionStream==="undefined")
+    throw new Error("เบราว์เซอร์นี้เปิดไฟล์ .xlsx ไม่ได้ — กรุณาบันทึกเป็น CSV แล้วอัปโหลดใหม่");
+  const entries=await unzipEntries(buf);
+  const dec=new TextDecoder(), xml=new DOMParser();
+  // shared strings (optional)
+  let shared=[];
+  const ss=entries.find(e=>e.name==="xl/sharedStrings.xml");
+  if(ss){
+    const doc=xml.parseFromString(dec.decode(await ss.read()),"application/xml");
+    shared=[...doc.getElementsByTagName("si")].map(si=>si.textContent);
+  }
+  // map sheet names to worksheet files via workbook.xml + its rels
+  let defs=[];
+  const wbE=entries.find(e=>e.name==="xl/workbook.xml");
+  const relE=entries.find(e=>e.name==="xl/_rels/workbook.xml.rels");
+  if(wbE&&relE){
+    const wb=xml.parseFromString(dec.decode(await wbE.read()),"application/xml");
+    const rel=xml.parseFromString(dec.decode(await relE.read()),"application/xml");
+    const relMap={};
+    for(const r of rel.getElementsByTagName("Relationship")) relMap[r.getAttribute("Id")]=r.getAttribute("Target")||"";
+    for(const s of wb.getElementsByTagName("sheet")){
+      const rid=s.getAttribute("r:id")||s.getAttribute("id")||"";
+      let t=(relMap[rid]||"").replace(/^\//,"");
+      if(t&&!/^xl\//.test(t)) t="xl/"+t;
+      const ent=entries.find(e=>e.name===t);
+      if(ent&&/worksheets/.test(t)) defs.push({name:s.getAttribute("name")||"", entry:ent});
+    }
+  }
+  if(!defs.length){
+    defs=entries.filter(e=>/^xl\/worksheets\/sheet\d+\.xml$/.test(e.name))
+      .sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}))
+      .map(e=>({name:"", entry:e}));
+  }
+  if(!defs.length) throw new Error("ไม่พบแผ่นงานในไฟล์");
+  const out=[];
+  for(const d of defs){
+    const doc=xml.parseFromString(dec.decode(await d.entry.read()),"application/xml");
+    const rows=[];
+    for(const r of doc.getElementsByTagName("row")){
+      const rec={A:"",B:"",C:""};
+      for(const c of r.getElementsByTagName("c")){
+        const col=colOf(c.getAttribute("r")||"");
+        if(!(col in rec)) continue;
+        const t=c.getAttribute("t"); let val="";
+        if(t==="s"){ const v=c.getElementsByTagName("v")[0]; val=shared[+((v&&v.textContent)||0)]||""; }
+        else if(t==="inlineStr"){ val=c.textContent; }
+        else { const v=c.getElementsByTagName("v")[0]; val=(v&&v.textContent)||""; }
+        rec[col]=val;
+      }
+      rows.push([rec.A,rec.B,rec.C]);
+    }
+    out.push({sheet:d.name, rows});
+  }
+  return out;
+}
+function rowsToItems(rows,defaultG){
+  const items=[];
+  for(const r of rows){
+    const w=String(r[0]||"").trim(), s=String(r[1]||"").trim();
+    if(!w) continue;
+    if(!items.length&&/^(word|words|vocab|vocabulary|คำ|คำศัพท์)$/i.test(w)) continue; // header row
+    items.push({w,s,g:gradeFromName(r[2])||defaultG||""});
+  }
+  return items;
+}
+let pendingImport=null;
+$("fileIn").addEventListener("change",async()=>{
+  const f=$("fileIn").files[0]; if(!f)return;
+  const pv=$("importPreview");
+  try{
+    let sheets;
+    if(/\.xlsx$/i.test(f.name)) sheets=await parseXLSX(await f.arrayBuffer());
+    else{
+      const text=await f.text();
+      const rows=/\.tsv$/i.test(f.name)||text.includes("\t")?parseTSV(text):parseCSV(text);
+      sheets=[{sheet:"",rows}];
+    }
+    let items=[];
+    for(const sh of sheets) items=items.concat(rowsToItems(sh.rows, gradeFromName(sh.sheet)));
+    if(!items.length) throw new Error("ไม่พบคำศัพท์ในไฟล์ — ตรวจว่าคอลัมน์ A เป็นคำศัพท์");
+    pendingImport=items;
+    const counts={};
+    items.forEach(it=>{ const k=it.g||"ไม่ระบุชั้น"; counts[k]=(counts[k]||0)+1; });
+    const detail=Object.entries(counts).map(([k,v])=>`${k}: ${v}`).join(" · ");
+    pv.hidden=false;
+    pv.innerHTML=`📄 พบ <b>${items.length} คำ</b> ในไฟล์ "${esc(f.name)}"${sheets.length>1?` จาก ${sheets.length} ชีต`:""}<br>
+      <span style="font-size:.88rem">${esc(detail)}</span><br>
+      นำเข้าสู่คลัง <b>เทอม ${term}</b> แบบใด?<br>
+      <div class="row" style="margin-top:.5rem">
+        <button class="btn primary small" id="btnImpAppend">➕ เพิ่มต่อท้ายคลังเดิม (ข้ามคำซ้ำ)</button>
+        <button class="btn small" id="btnImpReplace">♻ แทนที่คลังทั้งหมด</button>
+        <button class="btn ghost small" id="btnImpCancel">ยกเลิก</button>
+      </div>`;
+    $("btnImpAppend").addEventListener("click",()=>{
+      let n=0;
+      pendingImport.forEach(it=>{
+        if(!bank.some(b=>b.w.toLowerCase()===it.w.toLowerCase()&&b.g===it.g)){ bank.push(it); n++; }
+      });
+      finishImport(`เพิ่มแล้ว ${n} คำ (ข้ามคำซ้ำ ${pendingImport.length-n} คำ)`);
+    });
+    $("btnImpReplace").addEventListener("click",()=>{
+      bank=pendingImport.slice(); picked=new Set();
+      finishImport(`แทนที่คลังด้วยคำจากไฟล์ ${pendingImport.length} คำแล้ว`);
+    });
+    $("btnImpCancel").addEventListener("click",()=>{ pendingImport=null; pv.hidden=true; $("fileIn").value=""; });
+  }catch(err){
+    pv.hidden=false;
+    pv.innerHTML=`⚠️ เปิดไฟล์ไม่สำเร็จ: ${esc(err.message||String(err))}<br>ลองบันทึกไฟล์เป็น .csv แล้วอัปโหลดอีกครั้ง`;
+    $("fileIn").value="";
+  }
+});
+function finishImport(msg){
+  pendingImport=null;
+  $("importPreview").hidden=true; $("fileIn").value="";
+  saveBank(); renderBank(); toast(msg);
+}
+$("btnExport").addEventListener("click",()=>{
+  if(!bank.length){ toast("คลังคำยังว่าง — ไม่มีอะไรให้ดาวน์โหลด"); return; }
+  const q=s=>'"'+String(s).replace(/"/g,'""')+'"';
+  const csv="﻿word,sentence,grade\n"+bank.map(it=>q(it.w)+","+q(it.s)+","+q(it.g)).join("\n");
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  a.download="words-term"+term+".csv";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  toast("ดาวน์โหลด words-term"+term+".csv แล้ว — อัปโหลดขึ้น GitHub เพื่อเป็นคลังกลางได้เลย");
+});
+let clearArmed=false;
+$("btnClearBank").addEventListener("click",()=>{
+  if(!bank.length){ toast("คลังคำว่างอยู่แล้ว"); return; }
+  if(!clearArmed){
+    clearArmed=true;
+    $("btnClearBank").textContent="⚠️ กดอีกครั้งเพื่อยืนยันการล้างทั้งหมด";
+    setTimeout(()=>{ clearArmed=false; $("btnClearBank").textContent="🗑 ล้างคลังทั้งหมด"; },4000);
+    return;
+  }
+  clearArmed=false; $("btnClearBank").textContent="🗑 ล้างคลังทั้งหมด";
+  bank=[]; picked=new Set(); saveBank(); renderBank();
+  toast("ล้างคลังคำแล้ว (ดาวน์โหลด CSV เก็บไว้ก่อนได้ในครั้งหน้า)");
+});
+$("btnSample").addEventListener("click",()=>{
+  const sample=[
+    ["beautiful","The garden is beautiful in spring."],
+    ["elephant","An elephant has a very long trunk."],
+    ["library","I borrow books from the library."],
+    ["umbrella","Take an umbrella because it might rain."],
+    ["chocolate","She gave me a bar of chocolate."],
+    ["mountain","We climbed the mountain last summer."],
+    ["breakfast","I eat breakfast at seven o'clock."],
+    ["dictionary","Look up new words in the dictionary."],
+    ["butterfly","A butterfly landed on the flower."],
+    ["vegetable","Eat a vegetable with every meal."]
+  ];
+  sample.forEach(([w,s])=>bank.push({w,s}));
+  saveBank(); renderBank(); toast("โหลดคำตัวอย่าง 10 คำแล้ว");
+});
+
+/* ---------- pick ---------- */
+function visibleIdx(){
+  return bank.map((_,i)=>i).filter(i=>{
+    const g=bank[i].g;
+    return gradeFilter==="all"||(gradeFilter==="none"?!g:g===gradeFilter);
+  });
+}
+function renderChips(){
+  const counts={}; bank.forEach(it=>{ const k=it.g||"none"; counts[k]=(counts[k]||0)+1; });
+  if(gradeFilter!=="all"&&!counts[gradeFilter==="none"?"none":gradeFilter]) gradeFilter="all";
+  const mk=(val,label,count)=>`<button class="chip ${gradeFilter===val?"on":""}" data-g="${val}">${label} (${count})</button>`;
+  let html=mk("all","ทั้งหมด",bank.length);
+  for(let n=1;n<=6;n++){ const g="ป."+n; if(counts[g]) html+=mk(g,g,counts[g]); }
+  if(counts.none&&bank.length!==counts.none) html+=mk("none","ไม่ระบุชั้น",counts.none);
+  $("gradeChips").innerHTML=bank.length?html:"";
+}
+function renderPick(){
+  const list=$("pickList");
+  $("pickEmpty").style.display=bank.length?"none":"";
+  renderChips();
+  list.innerHTML=visibleIdx().map((i,pos)=>{const it=bank[i];return `
+    <li class="word-item pick-item ${picked.has(i)?"checked":""}" data-i="${i}">
+      <input type="checkbox" ${picked.has(i)?"checked":""} aria-label="เลือก ${esc(it.w)}">
+      <span class="num">${pos+1}.</span>
+      <span class="body"><span class="w">${esc(it.w)}</span>${it.g?`<span class="gbadge">${esc(it.g)}</span>`:""}
+        ${it.s?`<br><span class="s">${esc(it.s)}</span>`:""}
+      </span>
+    </li>`;}).join("");
+  updatePickCount();
+}
+$("gradeChips").addEventListener("click",e=>{
+  const b=e.target.closest(".chip"); if(!b)return;
+  gradeFilter=b.dataset.g; renderPick();
+});
+$("pickList").addEventListener("click",e=>{
+  const li=e.target.closest(".pick-item"); if(!li)return;
+  const i=+li.dataset.i;
+  if(picked.has(i)) picked.delete(i);
+  else{
+    if(picked.size>=MAX){ toast(`เลือกได้สูงสุด ${MAX} คำ`); if(e.target.type==="checkbox")e.target.checked=false; return; }
+    picked.add(i);
+  }
+  renderPick();
+});
+function updatePickCount(){
+  for(const id of ["pickCount","pickCountBar"]){
+    const c=$(id); c.textContent=`${picked.size} / ${MAX}`;
+    c.classList.toggle("full",picked.size>=MAX);
+  }
+}
+$("btnApplyExpr").addEventListener("click",()=>{
+  const expr=$("pickExpr").value.trim();
+  if(!expr){ toast("พิมพ์หมายเลขหรือคำที่ต้องการเลือกก่อน"); return; }
+  const vis=visibleIdx(); // ตัวเลขอ้างอิงตามรายการที่แสดงอยู่ (ตามตัวกรองระดับชั้น)
+  const sel=new Set(); const misses=[];
+  for(const tokRaw of expr.split(",")){
+    const tok=tokRaw.trim(); if(!tok)continue;
+    const range=tok.match(/^(\d+)\s*[-–]\s*(\d+)$/);
+    if(range){
+      let a=+range[1], b=+range[2]; if(a>b)[a,b]=[b,a];
+      for(let n=a;n<=b;n++) if(n>=1&&n<=vis.length) sel.add(vis[n-1]);
+    } else if(/^\d+$/.test(tok)){
+      const n=+tok; if(n>=1&&n<=vis.length) sel.add(vis[n-1]); else misses.push(tok);
+    } else {
+      const idx=vis.find(i=>bank[i].w.toLowerCase()===tok.toLowerCase());
+      if(idx!==undefined) sel.add(idx); else misses.push(tok);
+    }
+  }
+  if(!sel.size){ toast("ไม่พบคำตามที่พิมพ์"); return; }
+  // เพิ่มเข้ากับที่เลือกไว้เดิม เพื่อให้เลือกสะสมข้ามหลายระดับชั้นได้
+  let added=0, over=0;
+  for(const i of sel){
+    if(picked.has(i)) continue;
+    if(picked.size>=MAX){ over++; continue; }
+    picked.add(i); added++;
+  }
+  renderPick();
+  let msg=`เพิ่มการเลือก ${added} คำ (รวม ${picked.size}/${MAX})`;
+  if(over) msg+=` — เกินโควตา ${over} คำ`;
+  if(misses.length) msg+=` (ไม่พบ: ${misses.join(", ")})`;
+  toast(msg);
+  $("pickExpr").value="";
+});
+$("pickExpr").addEventListener("keydown",e=>{ if(e.key==="Enter")$("btnApplyExpr").click(); });
+$("btnPickAll").addEventListener("click",()=>{
+  picked=new Set(visibleIdx().slice(0,MAX)); renderPick();
+});
+$("btnPickClear").addEventListener("click",()=>{ picked=new Set(); renderPick(); });
+$("btnGoTest").addEventListener("click",()=>{
+  if(!picked.size){ toast("ยังไม่ได้เลือกคำ — ติ๊กเลือกหรือพิมพ์ช่วงหมายเลขก่อน"); return; }
+  showTab("test"); resetStage();
+});
+
+/* ---------- share ---------- */
+function encodeShare(items){
+  const json=JSON.stringify({v:1, items, rate:settings.rate, writeSecs:settings.writeSecs, repeats:settings.repeats});
+  return btoa(String.fromCharCode(...new TextEncoder().encode(json)))
+    .replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function decodeShare(str){
+  const b64=str.replace(/-/g,"+").replace(/_/g,"/");
+  const bin=atob(b64);
+  const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+$("btnShare").addEventListener("click",async()=>{
+  if(!picked.size){ toast("เลือกคำที่จะสอบก่อน จึงจะสร้างลิงก์ได้"); return; }
+  const items=[...picked].sort((a,b)=>a-b).map(i=>bank[i]);
+  const url=location.origin+location.pathname+location.search+"#test="+encodeShare(items);
+  $("shareOut").hidden=false; $("shareOut").textContent=url;
+  try{ await navigator.clipboard.writeText(url); toast("คัดลอกลิงก์แล้ว — ส่งให้เพื่อนครูได้เลย"); }
+  catch(e){ toast("สร้างลิงก์แล้ว — กดค้างที่ลิงก์เพื่อคัดลอก"); }
+});
+(function checkHash(){
+  const m=location.hash.match(/#test=([A-Za-z0-9\-_]+)/);
+  if(!m)return;
+  let data;
+  try{ data=decodeShare(m[1]); }catch(e){ return; }
+  if(!data||!Array.isArray(data.items)||!data.items.length)return;
+  const items=data.items.filter(it=>it&&it.w).slice(0,MAX).map(it=>({w:String(it.w),s:String(it.s||""),g:String(it.g||"")}));
+  if(typeof data.rate==="number")settings.rate=data.rate;
+  if(typeof data.writeSecs==="number")settings.writeSecs=data.writeSecs;
+  if(typeof data.repeats==="number")settings.repeats=data.repeats;
+  const bn=$("importBanner");
+  bn.hidden=false;
+  bn.innerHTML=`🐝 <b>ได้รับชุดข้อสอบจากลิงก์:</b> ${items.length} คำ &nbsp;
+    <button class="btn primary small" id="btnUseShared">ใช้ชุดนี้และไปหน้าทดสอบ</button>
+    <button class="btn small" id="btnAddShared">เพิ่มเข้าคลังคำของฉันด้วย</button>`;
+  $("btnUseShared").addEventListener("click",()=>{
+    const start=bank.length;
+    // merge without duplicating identical words already in bank
+    const idxs=[];
+    items.forEach(it=>{
+      let i=bank.findIndex(b=>b.w.toLowerCase()===it.w.toLowerCase()&&b.s===it.s);
+      if(i<0){ bank.push(it); i=bank.length-1; }
+      idxs.push(i);
+    });
+    saveBank(); picked=new Set(idxs); renderBank();
+    bn.hidden=true; showTab("test"); resetStage();
+  });
+  $("btnAddShared").addEventListener("click",()=>{
+    items.forEach(it=>{
+      if(!bank.some(b=>b.w.toLowerCase()===it.w.toLowerCase()&&b.s===it.s)) bank.push(it);
+    });
+    saveBank(); renderBank(); toast("เพิ่มเข้าคลังคำแล้ว"); bn.hidden=true;
+  });
+})();
+
+/* ---------- voices ---------- */
+let voices=[];
+function loadVoices(){
+  const all=speechSynthesis.getVoices();
+  voices=all.filter(v=>/en[-_]US/i.test(v.lang));
+  if(!voices.length) voices=all.filter(v=>/^en/i.test(v.lang));
+  const sel=$("voiceSel");
+  sel.innerHTML=voices.length
+    ? voices.map(v=>`<option value="${esc(v.voiceURI)}">${esc(v.name)}${/en[-_]US/i.test(v.lang)?"":" ("+v.lang+")"}</option>`).join("")
+    : `<option value="">(ไม่พบเสียงภาษาอังกฤษในเครื่องนี้)</option>`;
+  if(voices.length) $("voiceWarn").hidden=true;
+  // pick a preferred clear US voice
+  if(voices.length){
+    const prefer=["Google US English","Microsoft Aria","Microsoft Jenny","Microsoft Michelle","Microsoft Ana","Samantha","Microsoft Zira","Microsoft Mark","Microsoft David"];
+    let chosen=voices.find(v=>v.voiceURI===settings.voiceURI);
+    if(!chosen){ for(const p of prefer){ chosen=voices.find(v=>v.name.startsWith(p)); if(chosen)break; } }
+    if(!chosen)chosen=voices[0];
+    sel.value=chosen.voiceURI; settings.voiceURI=chosen.voiceURI; saveSettings();
+  }
+}
+speechSynthesis.onvoiceschanged=loadVoices;
+loadVoices();
+// voices load asynchronously — warn only if still none after a grace period
+setTimeout(()=>{
+  if(!speechSynthesis.getVoices().length) $("voiceWarn").hidden=false;
+},2500);
+$("voiceSel").addEventListener("change",()=>{ settings.voiceURI=$("voiceSel").value; saveSettings(); });
+
+function currentVoice(){ return voices.find(v=>v.voiceURI===settings.voiceURI)||voices[0]||null; }
+function makeUtterance(text,rate){
+  const u=new SpeechSynthesisUtterance(text);
+  const v=currentVoice(); if(v)u.voice=v;
+  u.lang="en-US"; u.rate=rate; u.pitch=1;
+  return u;
+}
+function speakOnce(text,rate){
+  speechSynthesis.cancel();
+  const u=makeUtterance(text,rate||settings.rate);
+  u.onerror=e=>{
+    if(e.error!=="interrupted"&&e.error!=="canceled")
+      toast("เล่นเสียงไม่สำเร็จ"+(e.error?` (${e.error})`:"")+" — ลองเปลี่ยนเสียงอ่าน หรือเปิดใน Chrome/Edge");
+  };
+  // cancel() immediately before speak() can swallow the utterance in Chrome — delay a beat
+  setTimeout(()=>{ speechSynthesis.speak(u); speechSynthesis.resume(); },80);
+}
+$("btnPreviewVoice").addEventListener("click",()=>{
+  speakOnce("Number 1. Butterfly. Butterfly. A butterfly landed on the flower.");
+});
+
+/* settings inputs */
+$("rate").value=settings.rate; $("rateVal").textContent=settings.rate.toFixed(2)+"×";
+$("writeSecs").value=settings.writeSecs; $("writeSecsVal").textContent=settings.writeSecs+" วินาที";
+$("repeats").value=settings.repeats; $("repeatsVal").textContent=settings.repeats+" รอบ";
+$("rate").addEventListener("input",()=>{
+  settings.rate=+$("rate").value; $("rateVal").textContent=settings.rate.toFixed(2)+"×"; saveSettings();
+});
+$("repeats").addEventListener("input",()=>{
+  settings.repeats=+$("repeats").value; $("repeatsVal").textContent=settings.repeats+" รอบ"; saveSettings();
+});
+$("writeSecs").addEventListener("input",()=>{
+  settings.writeSecs=+$("writeSecs").value; $("writeSecsVal").textContent=settings.writeSecs+" วินาที"; saveSettings();
+});
+
+/* ---------- bell (Web Audio) ---------- */
+let audioCtx=null;
+function bell(){
+  try{
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended")audioCtx.resume();
+    const t=audioCtx.currentTime;
+    [[1318.5,0],[1760,0.02]].forEach(([f,d])=>{
+      const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+      o.type="sine"; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t+d);
+      g.gain.exponentialRampToValueAtTime(0.5,t+d+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+d+1.3);
+      o.connect(g).connect(audioCtx.destination);
+      o.start(t+d); o.stop(t+d+1.4);
+    });
+  }catch(e){}
+}
+
+/* ---------- test player ---------- */
+let run={id:0, active:false, paused:false, idx:0};
+
+function resetStage(){
+  testList=[...picked].sort((a,b)=>a-b).map(i=>bank[i]);
+  testKey=pickKey();
+  $("answerCard").hidden=true;
+  $("stgProgress").textContent=testList.length?`ชุดทดสอบ ${testList.length} คำ — พร้อมเริ่ม`:"ยังไม่ได้เลือกคำ";
+  $("stgNum").textContent="—";
+  $("stgPhase").textContent=testList.length?`กด "เริ่มการทดสอบ" เมื่อนักเรียนพร้อม`:`เลือกคำที่แท็บ "เลือกคำสอบ" ก่อน`;
+  $("stgPhase").classList.remove("writing");
+  $("ring").hidden=true; $("stgReveal").hidden=true; $("stgReveal").textContent="";
+  setControls(false);
+}
+function setControls(running){
+  $("btnStart").hidden=running;
+  $("btnShuffle").hidden=running;
+  $("btnPause").hidden=!running;
+  $("btnRepeat").hidden=!running;
+  $("btnSkip").hidden=!running;
+  $("btnStop").hidden=!running;
+}
+function abortableSleep(ms,id){
+  return new Promise(res=>{
+    const t0=performance.now();
+    (function tick(){
+      if(run.id!==id)return res(false);
+      if(performance.now()-t0>=ms)return res(true);
+      setTimeout(tick,60);
+    })();
+  });
+}
+function speakAsync(text,rate,id){
+  return new Promise(res=>{
+    if(run.id!==id)return res(false);
+    let attempts=0, done=false, wd=null;
+    const finish=ok=>{ if(!done){done=true;clearTimeout(wd);res(ok);} };
+    const tryOnce=()=>{
+      if(run.id!==id)return finish(false);
+      const u=makeUtterance(text,rate);
+      let started=false;
+      u.onstart=()=>{ started=true; };
+      u.onend=()=>finish(true);
+      u.onerror=e=>{
+        if(e.error==="interrupted"||e.error==="canceled")return finish(false);
+        speechFail(e.error); finish(false);
+      };
+      const doSpeak=()=>{
+        if(run.id!==id)return finish(false);
+        speechSynthesis.speak(u);
+        speechSynthesis.resume(); // un-stick a paused engine (Chrome quirk)
+        clearTimeout(wd);
+        wd=setTimeout(()=>{
+          // never started speaking: engine is stuck or has no usable voice
+          if(done||started)return;
+          speechSynthesis.cancel();
+          if(++attempts<2){ setTimeout(tryOnce,150); }
+          else { speechFail(""); finish(false); }
+        },3500);
+      };
+      if(speechSynthesis.speaking||speechSynthesis.pending){ speechSynthesis.cancel(); setTimeout(doSpeak,80); }
+      else doSpeak();
+    };
+    tryOnce();
+    (function watch(){
+      if(done)return;
+      if(run.id!==id){ speechSynthesis.cancel(); finish(false); return; }
+      setTimeout(watch,120);
+    })();
+  });
+}
+function speechFail(err){
+  const wasActive=run.active;
+  run.id++; run.active=false; run.paused=false;
+  speechSynthesis.cancel();
+  setControls(false);
+  $("btnPause").textContent="⏸ พัก";
+  $("ring").hidden=true;
+  if(wasActive){
+    $("stgPhase").classList.remove("writing");
+    $("stgPhase").textContent="⚠️ เล่นเสียงไม่สำเร็จ"+(err?` (${err})`:"")+" — กดปุ่ม \"ทดสอบเสียง\" ลองเปลี่ยนเสียงอ่าน หรือเปิดลิงก์ใน Google Chrome / Microsoft Edge";
+  }
+  toast("เล่นเสียงไม่สำเร็จ — ตรวจเสียงเครื่อง แล้วลองเปลี่ยนเสียงอ่านในเมนู");
+}
+async function countdown(secs,id){
+  $("ring").hidden=false;
+  for(let s=secs;s>0;s--){
+    if(run.id!==id)return false;
+    $("ringSecs").textContent=s;
+    $("ring").style.setProperty("--p",(100*(secs-s+1)/secs).toFixed(1));
+    if(!await abortableSleep(1000,id))return false;
+  }
+  $("ring").hidden=true;
+  return true;
+}
+async function playItem(i,id){
+  const it=testList[i];
+  $("stgProgress").textContent=`ข้อ ${i+1} จาก ${testList.length}`;
+  $("stgNum").textContent="No. "+(i+1);
+  $("ring").hidden=true;
+  updateReveal(it);
+  const R=settings.rate;
+  $("stgPhase").textContent="🔊 ฟังคำศัพท์…"; $("stgPhase").classList.remove("writing");
+  if(!await speakAsync(`Number ${i+1}.`,Math.min(R+0.1,1.1),id))return false;
+  if(!await abortableSleep(800,id))return false;
+  const reps=Math.max(1,settings.repeats|0);
+  for(let k=0;k<reps;k++){
+    if(!await speakAsync(it.w,R,id))return false;
+    // 3s gap between repeats, and 3s from the last repeat to the sentence
+    if(!await abortableSleep(3000,id))return false;
+  }
+  if(it.s){
+    $("stgPhase").textContent="📖 ฟังประโยค…";
+    if(!await speakAsync(it.s,R,id))return false;
+    if(!await abortableSleep(600,id))return false;
+  }
+  $("stgPhase").textContent="✍️ เวลาเขียนคำตอบ"; $("stgPhase").classList.add("writing");
+  if(!await countdown(settings.writeSecs,id))return false;
+  $("stgPhase").classList.remove("writing");
+  bell();
+  if(!await abortableSleep(1600,id))return false;
+  return true;
+}
+function updateReveal(it){
+  const on=$("chkReveal").checked;
+  $("stgReveal").hidden=!on;
+  if(on&&it)$("stgReveal").innerHTML=esc(it.w)+(it.s?`<span class="sen">${esc(it.s)}</span>`:"");
+}
+$("chkReveal").addEventListener("change",()=>{
+  updateReveal(run.active?testList[run.idx]:null);
+});
+async function runTest(fromIdx){
+  const id=++run.id;
+  run.active=true; run.paused=false;
+  setControls(true);
+  audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+  for(let i=fromIdx;i<testList.length;i++){
+    run.idx=i;
+    const ok=await playItem(i,id);
+    if(!ok)return; // aborted (pause/stop/skip/repeat took over)
+  }
+  if(run.id!==id)return;
+  finishTest();
+  speakAsync("This is the end of the test. Well done!",settings.rate,run.id); // fire and forget
+}
+function finishTest(){
+  run.id++; run.active=false; run.paused=false;
+  speechSynthesis.cancel();
+  setControls(false);
+  $("btnPause").textContent="⏸ พัก";
+  $("stgNum").textContent="🐝";
+  $("stgProgress").textContent=`จบการทดสอบ — ทั้งหมด ${testList.length} ข้อ`;
+  $("stgPhase").textContent="เก่งมาก! เฉลยอยู่ด้านล่าง หรือกดเริ่มใหม่เพื่อทดสอบอีกครั้ง";
+  $("stgPhase").classList.remove("writing");
+  $("ring").hidden=true;
+  showAnswers();
+}
+function showAnswers(){
+  $("ansCount").textContent=testList.length+" คำ";
+  $("answerList").innerHTML=testList.map((it,i)=>`
+    <li class="word-item">
+      <span class="num">${i+1}.</span>
+      <span class="body"><span class="w">${esc(it.w)}</span>
+        ${it.s?`<br><span class="s">${esc(it.s)}</span>`:""}
+      </span>
+    </li>`).join("");
+  $("answerCard").hidden=false;
+  $("answerCard").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+$("btnHideAns").addEventListener("click",()=>{ $("answerCard").hidden=true; });
+$("btnShuffle").addEventListener("click",()=>{
+  if(testKey!==pickKey()) resetStage();
+  if(testList.length<2){ toast("ต้องมีอย่างน้อย 2 คำจึงจะสลับลำดับได้"); return; }
+  for(let i=testList.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [testList[i],testList[j]]=[testList[j],testList[i]];
+  }
+  $("answerCard").hidden=true;
+  $("stgProgress").textContent=`ชุดทดสอบ ${testList.length} คำ — สลับลำดับแล้ว`;
+  $("stgPhase").textContent="🔀 สลับลำดับคำแล้ว — กดสลับซ้ำได้ หรือกดเริ่มการทดสอบ";
+  toast("สลับลำดับคำแล้ว");
+});
+$("btnStart").addEventListener("click",()=>{
+  if(testKey!==pickKey()) resetStage();
+  if(!testList.length){ toast("ยังไม่ได้เลือกคำ — ไปที่แท็บ \"เลือกคำสอบ\" ก่อน"); return; }
+  $("answerCard").hidden=true;
+  runTest(0);
+});
+$("btnPause").addEventListener("click",()=>{
+  if(!run.active)return;
+  if(!run.paused){
+    run.paused=true; run.id++; speechSynthesis.cancel();
+    $("btnPause").textContent="▶ เล่นต่อ (อ่านข้อนี้ใหม่)";
+    $("stgPhase").textContent="⏸ พักอยู่ — กดเล่นต่อเพื่ออ่านข้อนี้อีกครั้ง";
+    $("stgPhase").classList.remove("writing");
+    $("ring").hidden=true;
+  }else{
+    run.paused=false; $("btnPause").textContent="⏸ พัก";
+    runTest(run.idx);
+  }
+});
+$("btnRepeat").addEventListener("click",()=>{
+  if(!run.active||run.paused)return;
+  run.id++; speechSynthesis.cancel();
+  runTest(run.idx);
+});
+$("btnSkip").addEventListener("click",()=>{
+  if(!run.active)return;
+  run.paused=false; $("btnPause").textContent="⏸ พัก";
+  run.id++; speechSynthesis.cancel();
+  if(run.idx+1<testList.length) runTest(run.idx+1);
+  else finishTest();
+});
+$("btnStop").addEventListener("click",()=>{
+  run.id++; run.active=false; run.paused=false;
+  speechSynthesis.cancel();
+  $("btnPause").textContent="⏸ พัก";
+  resetStage();
+});
+
+/* init */
+updateTermUI();
+renderBank();
+loadRemoteBank();
+window.addEventListener("beforeunload",()=>speechSynthesis.cancel());
+</script>
+
+</body>
+</html>
